@@ -10,8 +10,9 @@ public class Locate : MonoBehaviour
     int[] edge_x = new int[7];
     int[] edge_y = new int[7];
     public int TARGET_X, TARGET_Y;
+    public int BORN_X, BORN_Y;
     public float Dis(int point_x, int point_y)
-    {
+    {   
         return Mathf.Sqrt((TARGET_X - point_x) * (TARGET_X - point_x) + (TARGET_Y - point_y) * (TARGET_Y - point_y));
     }
     public bool InPolygon(int point_x,int point_y)
@@ -51,5 +52,7 @@ public class Locate : MonoBehaviour
         edge_y[6] = tilemap.WorldToCell(locate1.transform.position).y;
         TARGET_X= tilemap.WorldToCell(locate4.transform.position).x;
         TARGET_Y= tilemap.WorldToCell(locate4.transform.position).y;
+        BORN_X = tilemap.WorldToCell(locate1.transform.position).x;
+        BORN_Y = tilemap.WorldToCell(locate1.transform.position).y;
     }
 }
