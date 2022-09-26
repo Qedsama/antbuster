@@ -23,9 +23,13 @@ public class Main : MonoBehaviour
     // Ants in [antleft,antright) are likely to survive
     void Born()
     {
-        antclass.antlist[antright] = new Antclass.Ant();
-        antclass.antlist[antright].x = locate.BORN_X;
-        antclass.antlist[antright].y = locate.BORN_Y;
+        antclass.antlist[antright] = new Antclass.Ant
+        {
+            x = locate.BORN_X,
+            y = locate.BORN_Y,
+            hp = 100,
+            age = 0
+        };
         antright++;
     }
     void Dead()
@@ -39,20 +43,19 @@ public class Main : MonoBehaviour
     }
     void Move()
     {
-        print(antright);
         for (int i = antleft; i < antright; i++)
         {
             if (antclass.antlist[i].x == locate.TARGET_X && antclass.antlist[i].y == locate.TARGET_Y)
             {
                 antclass.antlist[i].hp = 0;
             }
-            //if (antclass.antlist[i].hp <= 0) continue;
+            antclass.antlist[i].age += 1;
+            if (antclass.antlist[i].hp <= 0) continue;
             float[] p = new float[6];
             for (int j = 0; j < 6; j++) p[j] = 0f;
             float sum=0f;
             for (int j = 0; j < dx.Length; j++)
             {
-                print(i);
                 if(!locate.InPolygon(antclass.antlist[i].x+dx[j], antclass.antlist[i].y+dy[j]))
                 {
                     p[j] = 0f;
@@ -64,7 +67,8 @@ public class Main : MonoBehaviour
                 sum += p[j];
             }
             UnityEngine.Random.InitState((int)DateTime.Now.Ticks);
-            float target = UnityEngine.Random.Range(0, 1);
+            float target = UnityEngine.Random.value;
+            print(target);
             int direction = 0;
             while (target > 0)
             {
@@ -85,13 +89,12 @@ public class Main : MonoBehaviour
         }
         for (int i = antleft; i < antright; i++)
         {
-            //if (antclass.antlist[i].hp <= 0) continue;
+            if (antclass.antlist[i].hp <= 0) continue;
             Vector3Int cell = new Vector3Int(antclass.antlist[i].x, antclass.antlist[i].y, 0);
             Vector3 grid;
             grid=tilemap.CellToWorld(cell);
             GameObject newant=Instantiate(oneant);
             newant.transform.position = grid;
-            if(i==0)print(cell);
         }
     }
     void Start()
@@ -121,7 +124,7 @@ public class Main : MonoBehaviour
             Dead();
             Move();
             UIofAnt();
-            starttime +=1;
+            starttime +=1f;
         }
     }
 }
